@@ -10,7 +10,7 @@ import pickle
 
 from threatexchange.signal_type.index import SignalTypeIndex, IndexMatch, T as IndexT
 from threatexchange.hashing.pdq_faiss_matcher import PDQMultiHashIndex
-
+from threatexchange.threat_updates import ThreatUpdateJSON
 
 class PDQIndex(SignalTypeIndex):
     """
@@ -69,3 +69,18 @@ class PDQIndex(SignalTypeIndex):
         Instanciate an index from a previous call to serialize
         """
         return pickle.loads(fin)
+
+    @classmethod
+    def can_process_te_update(cls, update: ThreatUpdateJSON) -> bool:
+        """
+        Whether or not an index of this type can process the updtae
+        from ThreatExchange
+        """
+        return update.threat_type() == 'pdq'
+
+    @classmethod
+    def load(cls) -> "SignalTypeIndex[T]":
+        pass
+
+    def process_updates(self, updates: t.Iterable(ThreatUpdateJSON)) -> None:
+        pass

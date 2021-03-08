@@ -25,6 +25,26 @@ module "hashing_data" {
   additional_tags = local.common_tags
 }
 
+module "fetcher" {
+  source          = "./fetcher"
+  prefix          = var.prefix
+  additional_tags = local.common_tags
+  log_retention_in_days = var.log_retention_in_days
+
+  lambda_docker_info = {
+    uri = var.hma_lambda_docker_uri
+    commands = {
+      fetcher = "hmalib.lambdas.pdq.fetcher.lambda_handler"
+    }
+  }
+
+  threat_exchange_data = {
+    bucket_name        = module.hashing_data.threat_exchange_data_folder_info.bucket_name
+    pdq_data_file_key  = "${module.hashing_data.threat_exchange_data_folder_info.key}pdq.te"
+    notification_topic = module.hashing_data.threat_exchange_data_folder_info.notification_topic
+  }
+}
+
 module "pdq_signals" {
   source = "./pdq-signals"
   prefix = var.prefix

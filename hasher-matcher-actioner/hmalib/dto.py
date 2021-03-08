@@ -106,3 +106,19 @@ class PDQMatchRecord(PDQRecordBase):
     def to_sqs_message(self) -> dict:
         # TODO add method for when matches are added to a sqs
         raise NotImplementedError
+
+@dataclass
+class Indexer():
+    def index(self, data):
+        raise NotImplementedError
+
+    def is_valid_te_update(self, update):
+        raise NotImplementedError
+
+@dataclass
+class PDQIndexer(Indexer):
+    def index(self, data):
+        pass
+
+    def is_valid_te_update(self, update):
+        return update['indicator_type'] == 'pdq'

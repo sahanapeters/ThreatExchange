@@ -22,6 +22,9 @@ At scale, the flow for matching looks something like:
 
 import typing as t
 
+from hmalib.lambdas.fetcher import ThreatExchangeUpdate
+
+
 
 T = t.TypeVar("T")
 
@@ -125,4 +128,12 @@ class SignalTypeIndex(t.Generic[T]):
     @classmethod
     def deserialize(cls, fin: t.BinaryIO) -> "SignalTypeIndex[T]":
         """Instanciate an index from a previous call to serialize"""
+        raise NotImplementedError
+
+    @classmethod
+    def can_process_te_update(cls, ThreatExchangeUpdate) -> bool:
+        """
+        Whether or not an index of this type can process the updtae
+        from ThreatExchange
+        """
         raise NotImplementedError
